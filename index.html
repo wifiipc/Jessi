@@ -393,9 +393,11 @@
             </div>
         </div>
 
-    </div><script>
+    </div>
+   <script>
         const FRASES = ["Eres mi niña hermosa", "El amor de mi vida","Eres mía y solo mía","Mi casualidad favorita", "Te amo infinito","te quiero mucho mucho muchísimo"];
         
+        // --- FOTOS SAN VALENTÍN ---
         const GALERIA = [
             { url: "foto1.jpeg", desc: "No se me veían las intenciones ni nada..." },
             { url: "foto2.jpeg", desc: "Nuestro primer atardecer siendo novios." },
@@ -404,6 +406,7 @@
             { url: "foto5.jpeg", desc: "nuestros primeros reyes juntos" }
         ];
 
+        // --- 20+ FOTOS 6 MESES ---
         const GALERIA_6MESES = [
             { url: "foto1.jpeg", desc: "Mes 1: Nuestro comienzo" },
             { url: "foto2.jpeg", desc: "Una tarde especial" },
@@ -429,6 +432,7 @@
             { url: "foto2.jpeg", desc: "Felices 6 Meses mi amor" }
         ];
         
+        // --- PLAYLIST COMPLETA ---
         const PLAYLIST = [
             { titulo: "Eu e Ti", artista: "9Louro, Yuly", archivo: "9Louro, Yuly - Eu e Ti (SPOTISAVER).mp3" },
             { titulo: "Os Meus Males", artista: "9Louro, Yuly", archivo: "9Louro, Yuly - Os Meus Males (SPOTISAVER).mp3" },
@@ -528,13 +532,14 @@
             { titulo: "Reventar la Ciudad", artista: "Walls, Funzo & Baby Loud", archivo: "Walls, Funzo & Baby Loud - Reventar la Ciudad (SPOTISAVER).mp3" }
         ];
 
+        // --- VARIABLES DE ESTADO Y CANDADOS DE ANIMACIÓN ---
         let currentSongIndex = 0;
         let isShuffle = false;
         let currentProfile = '';
         let hasMusic = false; 
-        let starsRunning = false; // CANDADO DE ANIMACION
-        let typingRunning = false; // CANDADO DE ANIMACION
-        
+        let starsRunning = false; 
+        let typingRunning = false; 
+        let heartRunning = false; // <-- Nuevo candado para que el corazón no se rompa
         const audio = document.getElementById('bg-music');
 
         // --- SISTEMA DE SCROLL SNAP ---
@@ -542,7 +547,10 @@
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    if (entry.target.id === 'corazon-scene') { initHeart(); animateHeart(); vibrate(40); }
+                    if (entry.target.id === 'corazon-scene') { 
+                        if (!heartRunning) { heartRunning = true; initHeart(); animateHeart(); }
+                        vibrate(40); 
+                    }
                     if (entry.target.id === 'galeria') { crearCarrusel(); }
                     if (entry.target.id === 'film-scene') { crearFilmStrip(); }
                 }
@@ -561,7 +569,7 @@
             const m = document.getElementById('month-select').value;
             const y = document.getElementById('year-select').value;
             
-            if (d == 25 && m == 10 && y == 2025) { // <-- CAMBIA AQUÍ TU FECHA SI ES NECESARIO
+            if (d == 25 && m == 10 && y == 2025) { 
                 vibrate(50);
                 document.getElementById('login-overlay').style.opacity = '0';
                 
@@ -649,7 +657,7 @@
             vibrate(30);
             currentProfile = profile;
             document.getElementById('profile-overlay').style.opacity = '0';
-            document.body.classList.remove('not-loaded');
+            document.body.classList.remove('not-loaded'); // Desbloqueamos el scroll
             
             const escenasSV = document.querySelectorAll('.escena-sv');
             const escenas6M = document.querySelectorAll('.escena-6m');
@@ -658,7 +666,7 @@
                 escenasSV.forEach(el => el.style.display = 'flex');
                 escenas6M.forEach(el => el.style.display = 'none');
                 
-                // ARRANCAMOS LAS ANIMACIONES CON CANDADO PARA EVITAR FALLOS
+                // Disparamos animaciones de San Valentín solo si no estaban corriendo
                 if(!starsRunning) { starsRunning = true; initStars(); animateStars(); }
                 if(!typingRunning) { typingRunning = true; typeWriter(); }
                 
@@ -678,7 +686,26 @@
         // --- BOTÓN VOLVER ---
         function goBackToMenu() {
             vibrate(30);
-            document.getElementById('main-container').scrollTo(0,0); 
+            
+            // 1. Bloquear el scroll para que la pantalla de atrás no se pueda mover mientras eliges
+            document.body.classList.add('not-loaded');
+            
+            // 2. Ocultar los botones de interfaz
+            document.getElementById('spotify-player').classList.remove('visible');
+            document.getElementById('back-btn').style.display = 'none';
+            
+            // 3. Subir el contenedor al principio SIN animacion de scroll (para evitar bugs de posición)
+            const mainContainer = document.getElementById('main-container');
+            mainContainer.style.scrollBehavior = 'auto'; // Quitamos la animación
+            mainContainer.scrollTop = 0; // Mandamos al inicio de golpe
+            mainContainer.style.scrollBehavior = 'smooth'; // Volvemos a poner la animación para después
+            
+            // 4. Parar los candados de animación por si el usuario entra a la otra escena y vuelve
+            currentProfile = '';
+            starsRunning = false;
+            heartRunning = false;
+            
+            // 5. Mostrar menú de perfiles
             showProfilesScreen();
         }
 
@@ -707,7 +734,11 @@
         // --- CANVAS (SAN VALENTIN) ---
         const starCanvas = document.getElementById('starCanvas'); const sCtx = starCanvas.getContext('2d'); let stars = [];
         function initStars() { starCanvas.width = window.innerWidth; starCanvas.height = window.innerHeight; stars = []; for(let i=0; i<300; i++) stars.push({x:Math.random()*starCanvas.width, y:Math.random()*starCanvas.height, z:Math.random()*starCanvas.width}); }
-        function animateStars() { if(currentProfile !== 'san_valentin') return; sCtx.fillStyle = "black"; sCtx.fillRect(0,0,starCanvas.width, starCanvas.height); sCtx.fillStyle = "white"; stars.forEach(s => { s.z -= 2; if(s.z <= 0) s.z = starCanvas.width; let x = (s.x-starCanvas.width/2)*(starCanvas.width/s.z)+starCanvas.width/2; let y = (s.y-starCanvas.height/2)*(starCanvas.width/s.z)+starCanvas.height/2; let size = (1-s.z/starCanvas.width)*2; if(x>0 && x<starCanvas.width && y>0 && y<starCanvas.height) { sCtx.beginPath(); sCtx.arc(x,y,size,0,Math.PI*2); sCtx.fill(); } }); requestAnimationFrame(animateStars); }
+        function animateStars() { 
+            if(currentProfile !== 'san_valentin') { starsRunning = false; return; } // Si salimos, matamos el bucle y abrimos candado
+            sCtx.fillStyle = "black"; sCtx.fillRect(0,0,starCanvas.width, starCanvas.height); sCtx.fillStyle = "white"; stars.forEach(s => { s.z -= 2; if(s.z <= 0) s.z = starCanvas.width; let x = (s.x-starCanvas.width/2)*(starCanvas.width/s.z)+starCanvas.width/2; let y = (s.y-starCanvas.height/2)*(starCanvas.width/s.z)+starCanvas.height/2; let size = (1-s.z/starCanvas.width)*2; if(x>0 && x<starCanvas.width && y>0 && y<starCanvas.height) { sCtx.beginPath(); sCtx.arc(x,y,size,0,Math.PI*2); sCtx.fill(); } }); 
+            requestAnimationFrame(animateStars); 
+        }
 
         const hCanvas = document.getElementById('heartCanvas'); const hCtx = hCanvas.getContext('2d'); let hPoints = []; let angY = 0;
         function initHeart() { 
@@ -715,7 +746,11 @@
             for(let i=0; i<1200; i++) { let t = Math.random()*Math.PI*2, x = 16*Math.pow(Math.sin(t),3), y = -(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t)); let z = (Math.random()-0.5)*10; hPoints.push({x:x*10, y:y*10, z:z*10, color: `hsl(${330+Math.random()*40}, 90%, 60%)`}); } 
             hCanvas.addEventListener('click', () => { vibrate([100, 50, 100]); });
         }
-        function animateHeart() { if(currentProfile !== 'san_valentin') return; hCtx.fillStyle = "rgba(0,0,0,0.2)"; hCtx.fillRect(0,0,hCanvas.width, hCanvas.height); angY += 0.015; let cx = hCanvas.width/2, cy = hCanvas.height/2; let scaleFactor = window.innerWidth < 768 ? 300 : 500; hPoints.forEach(p => { let rx = p.x*Math.cos(angY) - p.z*Math.sin(angY); let rz = p.x*Math.sin(angY) + p.z*Math.cos(angY); let scale = scaleFactor/(scaleFactor+rz); if(scale>0) { hCtx.fillStyle = p.color; hCtx.beginPath(); hCtx.arc(rx*scale+cx, p.y*scale+cy, 1.5*scale, 0, Math.PI*2); hCtx.fill(); } }); requestAnimationFrame(animateHeart); }
+        function animateHeart() { 
+            if(currentProfile !== 'san_valentin') { heartRunning = false; return; } // Si salimos, matamos el bucle y abrimos candado
+            hCtx.fillStyle = "rgba(0,0,0,0.2)"; hCtx.fillRect(0,0,hCanvas.width, hCanvas.height); angY += 0.015; let cx = hCanvas.width/2, cy = hCanvas.height/2; let scaleFactor = window.innerWidth < 768 ? 300 : 500; hPoints.forEach(p => { let rx = p.x*Math.cos(angY) - p.z*Math.sin(angY); let rz = p.x*Math.sin(angY) + p.z*Math.cos(angY); let scale = scaleFactor/(scaleFactor+rz); if(scale>0) { hCtx.fillStyle = p.color; hCtx.beginPath(); hCtx.arc(rx*scale+cx, p.y*scale+cy, 1.5*scale, 0, Math.PI*2); hCtx.fill(); } }); 
+            requestAnimationFrame(animateHeart); 
+        }
 
         // --- CARRUSEL ORIGINAL ---
         function crearCarrusel() {
