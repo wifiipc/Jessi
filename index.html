@@ -5,41 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Para ti ❤️</title>
     <style>
-        /* ========================================= */
-        /* --- 1. FUENTES Y VARIABLES BASE --- */
-        /* ========================================= */
+        /* --- 1. FUENTES Y VARIABLES --- */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&family=Dancing+Script:wght@700&family=Pacifico&display=swap');
 
         *, *::after, *::before { padding: 0; margin: 0; box-sizing: border-box; }
         :root { --dark-color: #000; --accent: #ff4d6d; }
 
-        html { background-color: var(--dark-color); overscroll-behavior: none; }
+        html { background-color: var(--dark-color); overscroll-behavior: none; height: 100vh; height: 100dvh; }
         body { 
             margin: 0; padding: 0; background-color: var(--dark-color); 
             font-family: 'Montserrat', sans-serif; color: white; 
-            height: 100dvh; width: 100vw; overflow: hidden; 
+            height: 100vh; height: 100dvh; width: 100vw; overflow: hidden; 
             -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; 
         }
 
-        /* ========================================= */
-        /* --- 2. INTRODUCCIÓN NETFLIX --- */
-        /* ========================================= */
-        #netflix-container { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background-color: #000000; z-index: 70000; flex-direction: column; 
-            justify-content: center; align-items: center; overflow: hidden; 
+        /* --- 2. CONTENEDOR PRINCIPAL Y ESCENAS --- */
+        #main-container { 
+            height: 100vh; height: 100dvh; width: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; 
+            scroll-behavior: smooth; position: absolute; top: 0; left: 0; scrollbar-width: none; 
         }
-        #netflix-container netflixintro { 
-            display: block; position: relative; width: 300px; height: 300px; overflow: hidden; 
-            animation-name: zoom-in; animation-delay: 0.5s; animation-duration: 3.5s; 
-            animation-timing-function: ease-in; animation-fill-mode: forwards; 
-            background-size: 4000px; background-position: -1950px 0; 
+        #main-container::-webkit-scrollbar { display: none; }
+        
+        .escena { 
+            position: relative; width: 100%; height: 100vh; height: 100dvh; 
+            scroll-snap-align: start; scroll-snap-stop: always; 
+            display: flex; justify-content: center; align-items: center; flex-direction: column; overflow: hidden; 
         }
-        #netflix-container netflixintro::before { 
-            content: ""; position: absolute; display: block; background-color: #000000; 
-            width: 150%; height: 30%; left: -25%; bottom: -27%; border-radius: 50%; 
-            z-index: 5; transform-origin: left center; background-size: 4000px; background-position: -1950px 0; 
-        }
+
+        /* --- 3. INTRO NETFLIX (CÓDIGO EXACTO Y CORREGIDO) --- */
+        #netflix-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000000; z-index: 70000; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; }
+        #netflix-container netflixintro { display: block; position: relative; width: 300px; height: 300px; overflow: hidden; animation-name: zoom-in; animation-delay: 0.5s; animation-duration: 3.5s; animation-timing-function: ease-in; animation-fill-mode: forwards; background-size: 4000px; background-position: -1950px 0; }
+        #netflix-container netflixintro::before { content: ""; position: absolute; display: block; background-color: #000000; width: 150%; height: 30%; left: -25%; bottom: -27%; border-radius: 50%; z-index: 5; transform-origin: left center; background-size: 4000px; background-position: -1950px 0; }
         #netflix-container netflixintro[letter=N] { transform-origin: 30% center; }
         #netflix-container netflixintro[letter=N] .helper-1 { width: 19.5%; height: 100%; background-color: rgba(228, 9, 19, 0.5); left: 22.4%; top: 0; transform: rotate(180deg); animation-name: fading-lumieres-box; animation-duration: 2s; animation-delay: 0.6s; animation-fill-mode: forwards; }
         #netflix-container netflixintro[letter=N] .helper-1 .effect-brush { animation-name: brush-moving; animation-duration: 2.5s; animation-fill-mode: forwards; animation-delay: 1.2s; }
@@ -83,6 +79,7 @@
         #netflix-container netflixintro [class*=helper-] .effect-brush .fur-29 { left: 90%; width: 2.8%; background: linear-gradient(to bottom, #e40913 0%, #e40913 30%, rgba(0, 0, 0, 0) 100%); }
         #netflix-container netflixintro [class*=helper-] .effect-brush .fur-30 { left: 92.8%; width: 3.5%; background: linear-gradient(to bottom, #e40913 0%, #e40913 19%, rgba(0, 0, 0, 0) 100%); }
         #netflix-container netflixintro [class*=helper-] .effect-brush .fur-31 { left: 96.3%; width: 3.7%; background: linear-gradient(to bottom, #e40913 0%, #e40913 37%, rgba(0, 0, 0, 0) 100%); }
+        
         #netflix-container netflixintro .effect-lumieres { position: absolute; width: 100%; height: 100%; opacity: 0; animation-name: showing-lumieres; animation-duration: 2s; animation-delay: 1.6s; animation-fill-mode: forwards; }
         #netflix-container netflixintro .effect-lumieres [class*=lamp-] { position: absolute; display: block; height: 100%; box-shadow: 0px 0px 10px 0px rgba(228, 9, 19, 0.75); background: var(--color); }
         #netflix-container netflixintro .effect-lumieres [class*=lamp-]::before { position: absolute; content: " "; display: block; width: 100%; height: 100%; background: var(--color); box-shadow: 0px 0px 10px 0px rgba(228, 9, 19, 0.75); }
@@ -128,9 +125,7 @@
         @keyframes showing-lumieres { 0% { opacity: 0; } 100% { opacity: 1; } }
         @keyframes fading-lumieres-box { 0% { background-color: rgba(228, 9, 19, 0.5); } 100% { background-color: rgba(228, 9, 19, 0); } }
 
-        /* ========================================= */
-        /* --- 3. UI MENÚS Y REPRODUCTOR GLASS --- */
-        /* ========================================= */
+        /* --- 4. UI MENÚS Y REPRODUCTOR GLASS --- */
         #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #050505; z-index: 60000; display: flex; justify-content: center; align-items: center; transition: opacity 0.8s ease; }
         .glass-card { background: rgba(30, 30, 30, 0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5); border-radius: 24px; padding: 35px; text-align: center; width: 85%; max-width: 400px; }
         .date-inputs { display: flex; justify-content: center; gap: 8px; margin: 25px 0; }
@@ -191,9 +186,8 @@
         @keyframes fadeInOut { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
         .titulo-flotante { position: absolute; top: 15%; font-family: 'Pacifico'; font-size: 2.5rem; color: #ff99ac; text-shadow: 0 0 20px #ff006e; z-index: 10; animation: flotar 3s infinite; text-align: center; width: 100%; }
         @keyframes flotar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-        /* ========================================= */
-        /* --- 4. CSS DE LAS ESCENAS --- */
-        /* ========================================= */
+
+        /* --- 5. CSS DE LAS ESCENAS --- */
         .escena-sv { display: none; } 
         
         #universo { background: black; }
@@ -263,6 +257,7 @@
     </style>
 </head>
 <body class="not-loaded">
+
     <button id="back-btn" onclick="goBackToMenu()">❮ Volver a Perfiles</button>
 
     <div id="netflix-container">
@@ -394,15 +389,13 @@
             <div class="swipe-hint">Desliza hacia los lados ↔</div>
             <div class="film-wrapper">
                 <div class="film-strip-scroll" id="film-strip">
-                    </div>
+                </div>
             </div>
         </div>
 
-    </div>
-    <script>
+    </div><script>
         const FRASES = ["Eres mi niña hermosa", "El amor de mi vida","Eres mía y solo mía","Mi casualidad favorita", "Te amo infinito","te quiero mucho mucho muchísimo"];
         
-        // --- FOTOS SAN VALENTÍN ---
         const GALERIA = [
             { url: "foto1.jpeg", desc: "No se me veían las intenciones ni nada..." },
             { url: "foto2.jpeg", desc: "Nuestro primer atardecer siendo novios." },
@@ -411,7 +404,6 @@
             { url: "foto5.jpeg", desc: "nuestros primeros reyes juntos" }
         ];
 
-        // --- 20+ FOTOS 6 MESES ---
         const GALERIA_6MESES = [
             { url: "foto1.jpeg", desc: "Mes 1: Nuestro comienzo" },
             { url: "foto2.jpeg", desc: "Una tarde especial" },
@@ -437,7 +429,6 @@
             { url: "foto2.jpeg", desc: "Felices 6 Meses mi amor" }
         ];
         
-        // --- PLAYLIST COMPLETA ---
         const PLAYLIST = [
             { titulo: "Eu e Ti", artista: "9Louro, Yuly", archivo: "9Louro, Yuly - Eu e Ti (SPOTISAVER).mp3" },
             { titulo: "Os Meus Males", artista: "9Louro, Yuly", archivo: "9Louro, Yuly - Os Meus Males (SPOTISAVER).mp3" },
@@ -541,6 +532,9 @@
         let isShuffle = false;
         let currentProfile = '';
         let hasMusic = false; 
+        let starsRunning = false; // CANDADO DE ANIMACION
+        let typingRunning = false; // CANDADO DE ANIMACION
+        
         const audio = document.getElementById('bg-music');
 
         // --- SISTEMA DE SCROLL SNAP ---
@@ -548,7 +542,6 @@
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    if (entry.target.id === 'universo' && currentProfile === 'san_valentin') { initStars(); animateStars(); }
                     if (entry.target.id === 'corazon-scene') { initHeart(); animateHeart(); vibrate(40); }
                     if (entry.target.id === 'galeria') { crearCarrusel(); }
                     if (entry.target.id === 'film-scene') { crearFilmStrip(); }
@@ -568,7 +561,7 @@
             const m = document.getElementById('month-select').value;
             const y = document.getElementById('year-select').value;
             
-            if (d == 25 && m == 10 && y == 2025) { // FECHA
+            if (d == 25 && m == 10 && y == 2025) { // <-- CAMBIA AQUÍ TU FECHA SI ES NECESARIO
                 vibrate(50);
                 document.getElementById('login-overlay').style.opacity = '0';
                 
@@ -664,7 +657,11 @@
             if(currentProfile === 'san_valentin') {
                 escenasSV.forEach(el => el.style.display = 'flex');
                 escenas6M.forEach(el => el.style.display = 'none');
-                initStars(); animateStars(); typeWriter(); 
+                
+                // ARRANCAMOS LAS ANIMACIONES CON CANDADO PARA EVITAR FALLOS
+                if(!starsRunning) { starsRunning = true; initStars(); animateStars(); }
+                if(!typingRunning) { typingRunning = true; typeWriter(); }
+                
             } else {
                 escenasSV.forEach(el => el.style.display = 'none');
                 escenas6M.forEach(el => el.style.display = 'flex');
@@ -756,7 +753,14 @@
         function closeDescription() { vibrate(30); document.getElementById('photo-overlay').classList.remove('active'); }
 
         let tIdx=0, cIdx=0, isDel=false;
-        function typeWriter() { const txt = FRASES[tIdx]; const el = document.getElementById('maquina-escribir'); el.innerText = isDel ? txt.substring(0, cIdx--) : txt.substring(0, cIdx++); let spd = isDel ? 50 : 100; if(!isDel && cIdx === txt.length+1) { spd = 2000; isDel = true; } else if(isDel && cIdx === 0) { isDel = false; tIdx = (tIdx+1)%FRASES.length; spd = 500; } setTimeout(typeWriter, spd); }
+        function typeWriter() { 
+            const txt = FRASES[tIdx]; const el = document.getElementById('maquina-escribir'); 
+            el.innerText = isDel ? txt.substring(0, cIdx--) : txt.substring(0, cIdx++); 
+            let spd = isDel ? 50 : 100; 
+            if(!isDel && cIdx === txt.length+1) { spd = 2000; isDel = true; } 
+            else if(isDel && cIdx === 0) { isDel = false; tIdx = (tIdx+1)%FRASES.length; spd = 500; } 
+            setTimeout(typeWriter, spd); 
+        }
 
         window.onload = () => { initPlaylist(); };
         window.addEventListener('resize', () => { initStars(); initHeart(); });
