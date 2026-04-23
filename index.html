@@ -816,7 +816,20 @@
             setTimeout(typeWriter, spd); 
         }
 
-        window.onload = () => { initPlaylist(); };
+        window.onload = () => { 
+            initPlaylist(); 
+            
+            // Generar los días del 1 al 31 dinámicamente para el login
+            const daySelect = document.getElementById('day-select');
+            if (daySelect && daySelect.options.length === 0) {
+                for(let i=1; i<=31; i++) { 
+                    let opt = document.createElement('option'); 
+                    opt.value = i; 
+                    opt.innerText = i; 
+                    daySelect.appendChild(opt); 
+                }
+            }
+        };
         window.addEventListener('resize', () => { initStars(); initHeart(); });
         #netflix-container, #netflix-container * {
         animation-play-state: running !important;
