@@ -595,30 +595,31 @@
         // --- LOGICA DE INICIO ---
         const daySelect = document.getElementById('day-select');
         for(let i=1; i<=31; i++) { let opt = document.createElement('option'); opt.value = i; opt.innerText = i; daySelect.appendChild(opt); }
-        function checkPassword() {
+       function checkPassword() {
             const d = document.getElementById('day-select').value;
             const m = document.getElementById('month-select').value;
             const y = document.getElementById('year-select').value;
             
-            // <-- RECUERDA ASEGURARTE DE QUE LA FECHA COINCIDA CON LA TUYA
+            // <-- ASEGÚRATE DE QUE LA FECHA ES LA CORRECTA
             if (d == 25 && m == 10 && y == 2025) { 
                 vibrate(50);
                 document.getElementById('login-overlay').style.opacity = '0';
                 
                 setTimeout(() => { 
                     document.getElementById('login-overlay').style.display = 'none'; 
-                    const intro = document.getElementById('netflix-container');
                     
-                    // 1. Mostramos el contenedor
+                    let intro = document.getElementById('netflix-container');
                     intro.style.display = 'flex';
-                    intro.classList.remove('fade-out'); // Limpiamos la clase por si acaso
+                    intro.classList.remove('fade-out');
                     
-                    // 2. TRUCO MAGICO: Forzar Reflow para que la animación de CSS se reinicie
-                    void intro.offsetWidth; 
+                    // TRUCO INFALIBLE: Clonar el contenedor para forzar el reinicio de TODAS las animaciones CSS
+                    let newIntro = intro.cloneNode(true);
+                    intro.parentNode.replaceChild(newIntro, intro);
+                    intro = newIntro; // Actualizamos la referencia al nuevo nodo
                     
-                    // 3. Empieza la secuencia de salida
+                    // Esperamos a que la intro termine el zoom y hacemos fade out
                     setTimeout(() => {
-                        intro.classList.add('fade-out');
+                        intro.classList.add('fade-out'); 
                         
                         setTimeout(() => {
                             intro.style.display = 'none';
@@ -817,6 +818,9 @@
 
         window.onload = () => { initPlaylist(); };
         window.addEventListener('resize', () => { initStars(); initHeart(); });
+        #netflix-container, #netflix-container * {
+        animation-play-state: running !important;
+        }
     </script>
 </body>
 </html>
