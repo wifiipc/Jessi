@@ -566,17 +566,18 @@
                 vibrate(50);
                 document.getElementById('login-overlay').style.opacity = '0';
                 
+                // 1. DESCONGELAMOS LAS ANIMACIONES AQUÍ
+                document.body.classList.remove('not-loaded');
+                
                 setTimeout(() => { 
                     document.getElementById('login-overlay').style.display = 'none'; 
                     
-                    let intro = document.getElementById('netflix-container');
+                    const intro = document.getElementById('netflix-container');
                     intro.style.display = 'flex';
                     intro.classList.remove('fade-out');
                     
-                    // TRUCO INFALIBLE: Clonar el contenedor para forzar el reinicio de TODAS las animaciones CSS
-                    let newIntro = intro.cloneNode(true);
-                    intro.parentNode.replaceChild(newIntro, intro);
-                    intro = newIntro; // Actualizamos la referencia al nuevo nodo
+                    // 2. FORZAMOS EL REINICIO DE FORMA SEGURA (Sin romper las luces)
+                    void intro.offsetWidth;
                     
                     // Esperamos a que la intro termine el zoom y hacemos fade out
                     setTimeout(() => {
