@@ -19,10 +19,11 @@
             -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; 
         }
 
-/* --- 2. CONTENEDOR PRINCIPAL Y ESCENAS --- */
+        /* --- 2. CONTENEDOR PRINCIPAL Y ESCENAS --- */
         #main-container { 
             height: 100vh; height: 100dvh; width: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; 
             scroll-behavior: smooth; position: absolute; top: 0; left: 0; scrollbar-width: none; 
+            z-index: 10; /* Aseguramos que esté por encima del fondo negro */
         }
         #main-container::-webkit-scrollbar { display: none; }
         
@@ -50,7 +51,9 @@
             background-color: #000000; z-index: 70000; flex-direction: column; 
             justify-content: center; align-items: center; overflow: hidden; 
             opacity: 1; transition: opacity 0.5s ease;
+            pointer-events: none; /* Para que no bloquee clics cuando desaparece */
         }
+        #netflix-container.active { pointer-events: all; }
         #netflix-container.fade-out { opacity: 0 !important; }
 
         #netflix-container netflixintro { 
@@ -210,7 +213,8 @@
         @keyframes zoom-in { 0% { transform: scale(1); } 100% { transform: scale(15); } }
         @keyframes showing-lumieres { 0% { opacity: 0; } 100% { opacity: 1; } }
         @keyframes fading-lumieres-box { 0% { background-color: rgba(228, 9, 19, 0.5); } 80% { background-color: rgba(228, 9, 19, 0.5); } 100% { background-color: rgba(228, 9, 19, 0); } }
-        }        /* --- 4. UI MENÚS Y REPRODUCTOR GLASS --- */
+
+        /* --- 4. UI MENÚS Y REPRODUCTOR GLASS --- */
         #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #050505; z-index: 60000; display: flex; justify-content: center; align-items: center; transition: opacity 0.8s ease; }
         .glass-card { background: rgba(30, 30, 30, 0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5); border-radius: 24px; padding: 35px; text-align: center; width: 85%; max-width: 400px; }
         .date-inputs { display: flex; justify-content: center; gap: 8px; margin: 25px 0; }
@@ -219,7 +223,8 @@
         .unlock-btn:active { transform: scale(0.95); }
         .error-msg { color: #ff4d4d; margin-top: 15px; font-size: 0.9rem; opacity: 0; transition: 0.3s; }
 
-        .overlay-center { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, #1a0a10 0%, #000 100%); z-index: 48000; display: none; flex-direction: column; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.8s ease; }
+        .overlay-center { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, #1a0a10 0%, #000 100%); z-index: 48000; display: none; flex-direction: column; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.8s ease; pointer-events: none;}
+        .overlay-center.active { pointer-events: all; }
         .btn-glass-group { display: flex; gap: 15px; margin-top: 25px; flex-direction: column; }
         .btn-glass { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 15px; border-radius: 15px; font-family: 'Montserrat'; font-weight: 600; font-size: 1rem; cursor: pointer; transition: 0.3s; }
         .btn-glass.primary { background: rgba(255, 77, 109, 0.6); border-color: var(--accent); }
@@ -232,7 +237,8 @@
         .song-btn { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.2s; text-align: left; }
         .song-btn:active { background: rgba(255,255,255,0.1); }
 
-        #profile-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #111; z-index: 45000; display: none; flex-direction: column; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.8s ease; }
+        #profile-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #111; z-index: 45000; display: none; flex-direction: column; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.8s ease; pointer-events: none;}
+        #profile-overlay.active { pointer-events: all; }
         .profile-title { font-family: 'Montserrat', sans-serif; font-size: 2rem; color: white; margin-bottom: 40px; text-align: center; font-weight: 500; letter-spacing: 1px;}
         .profiles-container { display: flex; gap: 30px; }
         .profile-card { cursor: pointer; text-align: center; transition: transform 0.3s ease; }
@@ -318,21 +324,21 @@
         
         #galeria { background: #000; overflow: hidden; }
         .carousel-container { position: relative; width: 140px; height: 200px; transform-style: preserve-3d; animation: rotarCarrusel 20s infinite linear; margin-top: 40px; }
-        .foto-card { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.1); border: 2px solid #ff4d6d; border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(255,77,109,0.5); cursor: pointer; }
+        .foto-card { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.1); border: 2px solid #ff4d6d; border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(255,77,109,0.5); cursor: pointer; pointer-events: auto;}
         .foto-card img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
 
         /* --- ESCENA 6 MESES: ROLLO DE PELÍCULA --- */
         .escena-6m { display: none; background: #050505; align-items: center; justify-content: center; }
         .film-wrapper { position: relative; width: 100vw; background: #111; padding: 40px 0; box-shadow: 0 15px 40px rgba(0,0,0,0.8); }
-        .film-wrapper::before, .film-wrapper::after { content: ''; position: absolute; left: 0; width: 100%; height: 20px; background-image: linear-gradient(90deg, transparent 40%, #000 40%); background-size: 30px 20px; z-index: 5; }
+        .film-wrapper::before, .film-wrapper::after { content: ''; position: absolute; left: 0; width: 100%; height: 20px; background-image: linear-gradient(90deg, transparent 40%, #000 40%); background-size: 30px 20px; z-index: 5; pointer-events: none;}
         .film-wrapper::before { top: 5px; } .film-wrapper::after { bottom: 5px; }
         .film-strip-scroll { display: flex; gap: 15px; padding: 0 50vw 0 20px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; align-items: center; }
         .film-strip-scroll::-webkit-scrollbar { display: none; }
         .film-frame { flex: 0 0 auto; width: 220px; height: 300px; scroll-snap-align: center; background: #000; border: 2px solid #333; padding: 5px; cursor: pointer; transition: transform 0.3s, filter 0.3s; }
-        .film-frame img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(15%) sepia(20%) contrast(1.1); transition: 0.3s; }
+        .film-frame img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(15%) sepia(20%) contrast(1.1); transition: 0.3s; pointer-events: none;}
         .film-frame:hover { transform: scale(1.05); z-index: 10; border-color: #4cc9f0; }
         .film-frame:hover img { filter: grayscale(0%) sepia(0%) contrast(1); }
-        .swipe-hint { position: absolute; top: 15%; color: #4cc9f0; font-family: 'Montserrat'; letter-spacing: 2px; font-size: 0.8rem; text-transform: uppercase; animation: fadeInOut 2s infinite; }
+        .swipe-hint { position: absolute; top: 15%; color: #4cc9f0; font-family: 'Montserrat'; letter-spacing: 2px; font-size: 0.8rem; text-transform: uppercase; animation: fadeInOut 2s infinite; pointer-events: none;}
 
         @media (max-width: 768px) {
             h1 { font-size: 2.8rem; } .carousel-container { width: 120px; height: 180px; } .titulo-flotante { font-size: 2rem; top: 10%; } .spotify-player { bottom: 10px; width: 95%; height: 75px; }
@@ -639,13 +645,12 @@
         function vibrate(pattern) { if (navigator.vibrate) navigator.vibrate(pattern); }
 
         // --- LOGICA DE INICIO ---
-        const daySelect = document.getElementById('day-select');
-        for(let i=1; i<=31; i++) { let opt = document.createElement('option'); opt.value = i; opt.innerText = i; daySelect.appendChild(opt); }
-       function checkPassword() {
+        function checkPassword() {
             const d = document.getElementById('day-select').value;
             const m = document.getElementById('month-select').value;
             const y = document.getElementById('year-select').value;
             
+            // <-- ASEGÚRATE DE QUE LA FECHA ES LA CORRECTA
             if (d == 25 && m == 10 && y == 2025) { 
                 vibrate(50);
                 document.getElementById('login-overlay').style.opacity = '0';
@@ -659,6 +664,7 @@
                     const intro = document.getElementById('netflix-container');
                     intro.style.display = 'flex';
                     intro.classList.remove('fade-out');
+                    intro.classList.add('active'); // Reactiva los clicks
                     
                     // Forzar repintado para iniciar animación
                     void intro.offsetWidth;
@@ -666,11 +672,13 @@
                     // Fade out cuando acaba el zoom
                     setTimeout(() => {
                         intro.classList.add('fade-out'); 
+                        intro.classList.remove('active'); // Desactiva clicks para no bloquear
                         
                         setTimeout(() => {
                             intro.style.display = 'none';
                             const musicPrompt = document.getElementById('music-prompt-overlay');
                             musicPrompt.style.display = 'flex';
+                            musicPrompt.classList.add('active');
                             setTimeout(() => musicPrompt.style.opacity = '1', 50);
                         }, 800); 
                     }, 3800); 
@@ -683,17 +691,23 @@
                 setTimeout(() => card.style.animation = '', 300);
             }
         }
+        
         // --- PREGUNTA MÚSICA ---
         function promptMusicChoice(wantsMusic) {
             vibrate(30);
             hasMusic = wantsMusic;
-            document.getElementById('music-prompt-overlay').style.opacity = '0';
+            
+            const musicPrompt = document.getElementById('music-prompt-overlay');
+            musicPrompt.style.opacity = '0';
+            musicPrompt.classList.remove('active');
             
             setTimeout(() => {
-                document.getElementById('music-prompt-overlay').style.display = 'none';
+                musicPrompt.style.display = 'none';
                 if (hasMusic) {
-                    document.getElementById('music-overlay').style.display = 'flex';
-                    setTimeout(() => document.getElementById('music-overlay').style.opacity = '1', 50);
+                    const musicOverlay = document.getElementById('music-overlay');
+                    musicOverlay.style.display = 'flex';
+                    musicOverlay.classList.add('active');
+                    setTimeout(() => musicOverlay.style.opacity = '1', 50);
                 } else {
                     showProfilesScreen();
                 }
@@ -718,10 +732,14 @@
         }
 
         function selectSongAndContinue(index) {
-            document.getElementById('music-overlay').style.opacity = '0';
+            const musicOverlay = document.getElementById('music-overlay');
+            musicOverlay.style.opacity = '0';
+            musicOverlay.classList.remove('active');
+            
             loadSong(index);
+            
             setTimeout(() => { 
-                document.getElementById('music-overlay').style.display = 'none'; 
+                musicOverlay.style.display = 'none'; 
                 showProfilesScreen();
             }, 800);
         }
@@ -738,6 +756,7 @@
         function showProfilesScreen() {
             const profileMenu = document.getElementById('profile-overlay');
             profileMenu.style.display = 'flex';
+            profileMenu.classList.add('active');
             setTimeout(() => profileMenu.style.opacity = '1', 50);
             
             document.getElementById('spotify-player').classList.remove('visible');
@@ -748,7 +767,11 @@
         function selectProfile(profile) {
             vibrate(30);
             currentProfile = profile;
-            document.getElementById('profile-overlay').style.opacity = '0';
+            
+            const profileMenu = document.getElementById('profile-overlay');
+            profileMenu.style.opacity = '0';
+            profileMenu.classList.remove('active');
+            
             document.body.classList.remove('not-loaded');
             
             const escenasSV = document.querySelectorAll('.escena-sv');
@@ -769,7 +792,7 @@
             }
 
             setTimeout(() => {
-                document.getElementById('profile-overlay').style.display = 'none';
+                profileMenu.style.display = 'none';
                 document.getElementById('back-btn').style.display = 'block';
                 if(hasMusic) { document.getElementById('spotify-player').classList.add('visible'); }
             }, 800);
